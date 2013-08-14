@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3529E6E917B6D28C00481324 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 3529E6E817B6D28C00481324 /* main.c */; };
 		3529E6EB17B6D28C00481324 /* w2mm.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3529E6EA17B6D28C00481324 /* w2mm.1 */; };
+		3529E6F317B6D30F00481324 /* parser.l in Sources */ = {isa = PBXBuildFile; fileRef = 3529E6F117B6D30F00481324 /* parser.l */; };
+		3529E6F417B6D30F00481324 /* parser.y in Sources */ = {isa = PBXBuildFile; fileRef = 3529E6F217B6D30F00481324 /* parser.y */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,8 +27,9 @@
 
 /* Begin PBXFileReference section */
 		3529E6E517B6D28C00481324 /* w2mm */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = w2mm; sourceTree = BUILT_PRODUCTS_DIR; };
-		3529E6E817B6D28C00481324 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		3529E6EA17B6D28C00481324 /* w2mm.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = w2mm.1; sourceTree = "<group>"; };
+		3529E6F117B6D30F00481324 /* parser.l */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; path = parser.l; sourceTree = "<group>"; };
+		3529E6F217B6D30F00481324 /* parser.y */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.yacc; path = parser.y; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,7 +62,8 @@
 		3529E6E717B6D28C00481324 /* w2mm */ = {
 			isa = PBXGroup;
 			children = (
-				3529E6E817B6D28C00481324 /* main.c */,
+				3529E6F117B6D30F00481324 /* parser.l */,
+				3529E6F217B6D30F00481324 /* parser.y */,
 				3529E6EA17B6D28C00481324 /* w2mm.1 */,
 			);
 			path = w2mm;
@@ -117,7 +120,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3529E6E917B6D28C00481324 /* main.c in Sources */,
+				3529E6F317B6D30F00481324 /* parser.l in Sources */,
+				3529E6F417B6D30F00481324 /* parser.y in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
