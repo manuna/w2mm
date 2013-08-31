@@ -1,10 +1,13 @@
 %{
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include "string_utils.h"
+#include "vartable.h"
 int yylex(void);
 int yyparse();
 
-int yydebug=1;
+//int yydebug = 1;
 
 void yyerror(const char *str)
 {
@@ -18,45 +21,134 @@ int yywrap()
   
 int main(int argc, char **argv)
 {
-	while (1) {
-    	yyparse();
-    }
+    yyparse();
 	return 0;
 } 
 
 %}
 
-%token LBRACKET RBRACKET
-%token CONSTANT STRING_LITERAL IDENTIFIER
-%token AND OR IF ELSE ENDIF
+%union {
+    int boolVal;
+    double numberVal;
+    char *strVal;
+};
+
+%token <strVal> IDENTIFIER
+%token AND_OP OR_OP EQ_OP NE_OP IF ELSE ENDIF LE_OP GE_OP
+%token ASK
+%token <numberVal> CONSTANT
+%token <strVal> STRING_LITERAL
 %token TEXT
+
+%type <strVal> text TEXT
+%type <numberVal> additive_expression multiplicative_expression
+%type <boolVal> conditional_expression logical_or_expression logical_and_expression
+%type <boolVal> equality_expression relational_expression
 
 %%
 
 translation_unit
-    : if_statement
-     /*TEXT else_statement TEXT endif_statement*/
-     ;
-
-if_statement
-    : LBRACKET /*IF CONSTANT*/ RBRACKET
+    : translation_unit code_or_text
+    | /* NULL */
+    ;
+    
+text: text TEXT
     {
-        printf("if_statement");
-    };
+        $$ = strdup2($1, $2);
+        
+        // Free previously allocated strings
+        if ($1 != $2) {
+            free($1);
+            free($2);
+        } else {
+            free($1);
+        }
+    }
+    | { $$ = NULL; }
+    ;
     
-else_statement
-    : LBRACKET ELSE RBRACKET;
+code_or_text
+    : statement
+    | text
+    ;
     
-endif_statement
-    : LBRACKET ENDIF RBRACKET;
+statement
+    : if_statement
+    | ask_statement
+    ;
+    
+if_statement
+    : if_expr text endif_expr
+    {
+        printf("text in if:\n%s\n", $2);
+    }
+    | if_expr text else_expr text endif_expr
+    {
+        printf("text in if:\n%s\ntext in else:\n%s\n", $2, $4);
+    }
+    ;
+    
+ask_statement
+    : '[' ASK STRING_LITERAL IDENTIFIER ']'
+    {
+        printf("ask text: %s\nask identifier: %s\n", $3, $4);
+    }
+    ;
 
-primary_expr
-    : CONSTANT
-    | STRING_LITERAL
-    | IDENTIFIER
-    | '(' expr ')'
-	;
+if_expr
+    : '[' IF conditional_expression ']';
     
-expr: primary_expr;
-	
+else_expr
+    : '[' ELSE ']';
+    
+endif_expr
+    : '[' ENDIF ']';
+
+conditional_expression
+    : CONSTANT
+    | IDENTIFIER
+    | STRING_LITERAL
+    | logical_or_expression
+    ;
+
+logical_or_expression
+    : logical_and_expression
+    | logical_or_expression OR_OP logical_and_expression
+    ;
+
+logical_and_expression
+    : equality_expression
+    | logical_and_expression AND_OP equality_expression
+    ;
+
+equality_expression
+    : relational_expression
+    | equality_expression EQ_OP relational_expression
+    | equality_expression NE_OP relational_expression
+    ;
+
+relational_expression
+    : additive_expression
+    | relational_expression '<' additive_expression
+    | relational_expression '>' additive_expression
+    | relational_expression LE_OP additive_expression
+    | relational_expression GE_OP additive_expression
+    ;
+    
+additive_expression
+    : multiplicative_expression
+    | additive_expression '+' multiplicative_expression
+    | additive_expression '-' multiplicative_expression
+    ;
+    
+multiplicative_expression
+    : primary_expression
+    | multiplicative_expression '*' primary_expression
+    | multiplicative_expression '/' primary_expression
+    ;
+    
+primary_expression
+    : conditional_expression
+    ;
+
 %%

@@ -4,94 +4,139 @@ H			[a-fA-F0-9]
 E			[Ee][+-]?{D}+
 FS			(f|F|l|L)
 IS			(u|U|l|L)*
-LB          (\[)
-RB          (\])
 
 %{
 #include "y.tab.h"
+int linenumber = 1;
 %}
 
+%s COMMAND
+
 %%
-LB						{
-                            printf("LBRACKET");
-                            return LBRACKET;
+
+<INITIAL>{
+"["                     {
+                            BEGIN(COMMAND);
+                            return *yytext;
+                        }
+                        
+[^\[^\n]+               {
+                            yylval.strVal = strdup(yytext);
+                            return(TEXT);
+                        }
+                        
+"\n"                    {
+                            yylval.strVal = strdup(yytext);
+                            ++linenumber;
+                            return(TEXT);
                         }
 
-RB						{
-                            printf("RBRACKET");
-                            return RBRACKET;
+}
+
+<COMMAND>{
+
+"]"						{
+                            BEGIN(INITIAL);
+                            return *yytext;
                         }
                         
 "AND"                   {
-                            printf("%s ", yytext);
-                            return (AND);
+                            return(AND_OP);
                         }
 
 "OR"                    {
-                            printf("%s ", yytext);
-                            return (OR);
+                            return(OR_OP);
                         }
                         
 "IF"                    {
-                            printf("%s ", yytext);
-                            return (IF);
+                            return(IF);
                         }
                         
 "ELSE"                  {
-                            printf("%s ", yytext);
-                            return (ELSE);
+                            return(ELSE);
                         }
                         
 "ENDIF"                 {
-                            printf("%s ", yytext);
-                            return (ENDIF);
+                            return(ENDIF);
+                        }
+                        
+"ASK"                   {
+                            return(ASK);
+                        }
+    
+"="                     {
+                            return(EQ_OP);
+                        }
+    
+"<>"                    {
+                            return(NE_OP);
+                        }
+                        
+">"                     {
+                            return(*yytext);
+                        }
+                        
+"<"                     {
+                            return(*yytext);
+                        }
+                        
+">="                    {
+                            return(GE_OP);
+                        }
+                        
+"<="                    {
+                            return(LE_OP);
                         }
 
 0[xX]{H}+{IS}?          {
-                            printf("CONSTANT(%s) ", yytext);
+                            yylval.numberVal = atoi(yytext);
                             return(CONSTANT);
                         }
 
 0{D}+{IS}?              {
-                            printf("CONSTANT(%s) ", yytext);
+                            yylval.numberVal = atoi(yytext);
                             return(CONSTANT);
                         }
 
 {D}+{IS}?               {
-                            printf("CONSTANT(%s) ", yytext);
+                            yylval.numberVal = atoi(yytext);
                             return(CONSTANT);
                         }
 
-L?'(\\.|[^\\'])+'       {
-                            printf("CONSTANT(%s) ", yytext);
+'(\\.|[^\\'])+'         {
+                            yylval.numberVal = atoi(yytext);
                             return(CONSTANT);
                         }
 
 {D}+{E}{FS}?            {
-                            printf("CONSTANT(%s) ", yytext);
+                            yylval.numberVal = atof(yytext);
                             return(CONSTANT);
                         }
 
 {D}*"."{D}+({E})?{FS}?	{
-                            printf("CONSTANT(%s) ", yytext);
+                            yylval.numberVal = atof(yytext);
                             return(CONSTANT);
                         }
 
 {D}+"."{D}*({E})?{FS}?	{
-                            printf("CONSTANT(%s) ", yytext);
+                            yylval.numberVal = atof(yytext);
                             return(CONSTANT);
                         }
 
 \"(\\.|[^\\"])*\"       {
-                            printf("STRING_LITERAL(%s) ", yytext);
+                            yylval.strVal = strdup(yytext);
                             return(STRING_LITERAL);
                         }
 
 {L}({L}|{D})*           {
-                            printf("IDENTIFIER(%s) ", yytext);
+                            yylval.strVal = strdup(yytext);
                             return(IDENTIFIER);
                         }
 						
-[-+\n]					{ return *yytext; }
+[-+]					{ return *yytext; }
+[\n]                    { ++linenumber; return *yytext; }
 [ \t]+					/* ignore whitespaces */
+
+}
+
 %%

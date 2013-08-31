@@ -9,7 +9,9 @@
 /* Begin PBXBuildFile section */
 		3529E6EB17B6D28C00481324 /* w2mm.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3529E6EA17B6D28C00481324 /* w2mm.1 */; };
 		3529E6F317B6D30F00481324 /* parser.l in Sources */ = {isa = PBXBuildFile; fileRef = 3529E6F117B6D30F00481324 /* parser.l */; };
-		3529E6F417B6D30F00481324 /* parser.y in Sources */ = {isa = PBXBuildFile; fileRef = 3529E6F217B6D30F00481324 /* parser.y */; };
+		3579FBCB17BC168D00CDBCB6 /* parser.y in Sources */ = {isa = PBXBuildFile; fileRef = 3529E6F217B6D30F00481324 /* parser.y */; };
+		35837FAB17D27382000D85DF /* vartable.c in Sources */ = {isa = PBXBuildFile; fileRef = 35837FAA17D27382000D85DF /* vartable.c */; };
+		35D1CF5C17BED95F00A34993 /* string_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 35D1CF5B17BED95F00A34993 /* string_utils.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -30,6 +32,10 @@
 		3529E6EA17B6D28C00481324 /* w2mm.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = w2mm.1; sourceTree = "<group>"; };
 		3529E6F117B6D30F00481324 /* parser.l */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; path = parser.l; sourceTree = "<group>"; };
 		3529E6F217B6D30F00481324 /* parser.y */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.yacc; path = parser.y; sourceTree = "<group>"; };
+		35837FA917D272A4000D85DF /* vartable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vartable.h; sourceTree = "<group>"; };
+		35837FAA17D27382000D85DF /* vartable.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = vartable.c; sourceTree = "<group>"; };
+		35D1CF5A17BED90300A34993 /* string_utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = string_utils.h; sourceTree = "<group>"; };
+		35D1CF5B17BED95F00A34993 /* string_utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = string_utils.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +71,10 @@
 				3529E6F117B6D30F00481324 /* parser.l */,
 				3529E6F217B6D30F00481324 /* parser.y */,
 				3529E6EA17B6D28C00481324 /* w2mm.1 */,
+				35D1CF5A17BED90300A34993 /* string_utils.h */,
+				35D1CF5B17BED95F00A34993 /* string_utils.c */,
+				35837FA917D272A4000D85DF /* vartable.h */,
+				35837FAA17D27382000D85DF /* vartable.c */,
 			);
 			path = w2mm;
 			sourceTree = "<group>";
@@ -121,7 +131,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				3529E6F317B6D30F00481324 /* parser.l in Sources */,
-				3529E6F417B6D30F00481324 /* parser.y in Sources */,
+				3579FBCB17BC168D00CDBCB6 /* parser.y in Sources */,
+				35D1CF5C17BED95F00A34993 /* string_utils.c in Sources */,
+				35837FAB17D27382000D85DF /* vartable.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,6 +159,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
+					YYDEBUG,
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
@@ -188,6 +201,7 @@
 		3529E6EF17B6D28C00481324 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -218,6 +232,7 @@
 				3529E6F017B6D28C00481324 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
