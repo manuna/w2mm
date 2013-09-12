@@ -6,6 +6,7 @@ FS			(f|F|l|L)
 IS			(u|U|l|L)*
 
 %{
+#include "vartable.h"
 #include "y.tab.h"
 int linenumber = 1;
 %}
@@ -89,47 +90,56 @@ int linenumber = 1;
                         }
 
 0[xX]{H}+{IS}?          {
-                            yylval.numberVal = atoi(yytext);
+                            yylval.varVal.var_type = VAR_INTEGER;
+                            yylval.varVal.value.val_integer = atoi(yytext);
                             return(CONSTANT);
                         }
 
 0{D}+{IS}?              {
-                            yylval.numberVal = atoi(yytext);
+                            yylval.varVal.var_type = VAR_INTEGER;
+                            yylval.varVal.value.val_integer = atoi(yytext);
                             return(CONSTANT);
                         }
 
 {D}+{IS}?               {
-                            yylval.numberVal = atoi(yytext);
+                            yylval.varVal.var_type = VAR_INTEGER;
+                            yylval.varVal.value.val_integer = atoi(yytext);
                             return(CONSTANT);
                         }
 
 '(\\.|[^\\'])+'         {
-                            yylval.numberVal = atoi(yytext);
+                            yylval.varVal.var_type = VAR_INTEGER;
+                            yylval.varVal.value.val_integer = atoi(yytext);
                             return(CONSTANT);
                         }
 
 {D}+{E}{FS}?            {
-                            yylval.numberVal = atof(yytext);
+                            yylval.varVal.var_type = VAR_DOUBLE;
+                            yylval.varVal.value.val_double = atof(yytext);
                             return(CONSTANT);
                         }
 
 {D}*"."{D}+({E})?{FS}?	{
-                            yylval.numberVal = atof(yytext);
+                            yylval.varVal.var_type = VAR_DOUBLE;
+                            yylval.varVal.value.val_double = atof(yytext);
                             return(CONSTANT);
                         }
 
 {D}+"."{D}*({E})?{FS}?	{
-                            yylval.numberVal = atof(yytext);
+                            yylval.varVal.var_type = VAR_DOUBLE;
+                            yylval.varVal.value.val_double = atof(yytext);
                             return(CONSTANT);
                         }
 
 \"(\\.|[^\\"])*\"       {
-                            yylval.strVal = strdup(yytext);
+                            yylval.varVal.var_type = VAR_STRING;
+                            yylval.varVal.value.val_string = strdup(yytext);
                             return(STRING_LITERAL);
                         }
 
 {L}({L}|{D})*           {
-                            yylval.strVal = strdup(yytext);
+                            yylval.varVal.var_type = VAR_STRING;
+                            yylval.varVal.value.val_string = strdup(yytext);
                             return(IDENTIFIER);
                         }
 						

@@ -16,6 +16,6 @@ int query_variable(const char *name, variable_t *value)
     }
     
     value->var_type = VAR_NULL;
-    value->value.val_number = 0;
+    value->value.val_integer = 0;
     return 0;
 }

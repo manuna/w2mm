@@ -12,14 +12,17 @@
 typedef enum {
     VAR_NULL,
     VAR_STRING,
-    VAR_NUMBER
+    VAR_DOUBLE,
+    VAR_INTEGER,
+    VAR_BOOL
 } variable_type_t;
 
 typedef struct {
     variable_type_t var_type;
     union {
         char *val_string;
-        double val_number;
+        double val_double;
+        int val_integer;
     } value;
 } variable_t;
 
