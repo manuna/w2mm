@@ -73,6 +73,10 @@ int linenumber = 1;
                             return(NE_OP);
                         }
                         
+"!="                    {
+                            return(NE_OP);
+                        }
+                        
 ">"                     {
                             return(*yytext);
                         }
@@ -143,7 +147,7 @@ int linenumber = 1;
                             return(IDENTIFIER);
                         }
 						
-[-+]					{ return *yytext; }
+[-+\(\)\*\/]            { return *yytext; }
 [\n]                    { ++linenumber; return *yytext; }
 [ \t]+					/* ignore whitespaces */
 

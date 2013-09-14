@@ -40,7 +40,7 @@ int main(int argc, char **argv)
 %token TEXT
 
 %type <strVal> text TEXT
-%type <varVal> additive_expression multiplicative_expression primary_expression
+%type <varVal> expression additive_expression multiplicative_expression primary_expression
 %type <varVal> if_expr conditional_expression logical_or_expression logical_and_expression
 %type <varVal> equality_expression relational_expression
 
@@ -108,65 +108,12 @@ else_expr
 endif_expr
     : '[' ENDIF ']';
 
+expression
+    : conditional_expression
+    ;
+
 conditional_expression
-    : CONSTANT
-    {
-        $$.var_type = VAR_BOOL;
-        switch($1.var_type) {
-            case VAR_DOUBLE:
-                $$.value.val_integer = $1.value.val_double != 0;
-                break;
-            case VAR_INTEGER:
-            case VAR_BOOL:
-                $$.value.val_integer = $1.value.val_integer != 0;
-                break;
-            case VAR_STRING:
-                $$.value.val_integer = $1.value.val_string != NULL;
-                break;
-            default:
-                $$.value.val_integer = 0;
-                break;
-
-        }
-    }
-    | IDENTIFIER
-    {
-        $$.var_type = VAR_BOOL;
-        if ($1.var_type == VAR_STRING) {
-            variable_t tmpVar;
-            query_variable($1.value.val_string, &tmpVar);
-            
-            switch(tmpVar.var_type) {
-                case VAR_DOUBLE:
-                    $$.value.val_integer = tmpVar.value.val_double != 0;
-                    break;
-                case VAR_INTEGER:
-                case VAR_BOOL:
-                    $$.value.val_integer = tmpVar.value.val_integer != 0;
-                    break;
-                case VAR_STRING:
-                    $$.value.val_integer = tmpVar.value.val_string != NULL;
-                    break;
-                default:
-                    $$.value.val_integer = 0;
-                    break;
-
-            }
-        } else {
-            $$.value.val_integer = 0;
-        }
-    }
-    | STRING_LITERAL
-    {
-        $$.var_type = VAR_BOOL;
-        $$.value.val_integer = 0;
-        
-    }
-    | logical_or_expression
-    | '(' logical_or_expression ')'
-    {
-        $$ = $2;
-    }
+    : logical_or_expression
     ;
 
 logical_or_expression
@@ -203,10 +150,6 @@ equality_expression
 
 relational_expression
     : additive_expression
-    {
-        $$.var_type = VAR_BOOL;
-        $$.value.val_integer = $1.value.val_integer != 0;
-    }
     | relational_expression '<' additive_expression
     {
         $$.var_type = VAR_BOOL;
@@ -214,6 +157,8 @@ relational_expression
     }
     | relational_expression '>' additive_expression
     {
+        printf("val1 = %d\n", $1.value.val_integer);
+        printf("val2 = %d\n", $3.value.val_integer);
         $$.var_type = VAR_BOOL;
         $$.value.val_integer = $1.value.val_integer > $3.value.val_integer;
     }
@@ -262,7 +207,13 @@ multiplicative_expression
     ;
     
 primary_expression
-    : conditional_expression
+    : CONSTANT
+    | IDENTIFIER
+    | STRING_LITERAL
+    | '(' expression ')'
+    {
+        $$ = $2;
+    }
     ;
 
 %%
